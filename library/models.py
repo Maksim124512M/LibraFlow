@@ -2,11 +2,13 @@ import uuid
 
 from django.db import models
 
+from accounts.models import User
+
 
 class Book(models.Model):
-    """
+    '''
     Model representing a book in the library.
-    """
+    '''
 
     GENRES = (
         ('fiction', 'Fiction'),
@@ -35,3 +37,22 @@ class Book(models.Model):
         verbose_name = 'Book'
         verbose_name_plural = 'Books'
         ordering = ['title']
+
+
+class BookRental(models.Model):
+    '''
+    Model representing a book rental.
+    '''
+
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='rentals')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='rentals')
+    rented_at = models.DateTimeField(auto_now_add=True)
+    returned_at = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.user.username} rented {self.book.title}'
+
+    class Meta:
+        verbose_name = 'Book Rental'
+        verbose_name_plural = 'Book Rentals'
+        ordering = ['-rented_at']
