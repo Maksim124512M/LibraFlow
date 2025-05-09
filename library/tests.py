@@ -193,3 +193,28 @@ class BookAPITestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
+    def test_book_stats(self):
+        # Create a book first
+        data = {
+            'title': 'Test Book',
+            'author': 'Test Author',
+            'description': 'Test Description',
+            'published_year': 2023,
+            'isbn': '1234567890123',
+            'genre': 'fiction',
+        }
+
+        response = self.client.post(
+            '/library/books/add/',
+            data=json.dumps(data),
+            format=json,
+            content_type='application/json',
+            **{'HTTP_AUTHORIZATION': f'Bearer {self.access_token}'}
+        )
+
+        response = self.client.get(
+            f'/library/books/stats/',
+        )
+
+        self.assertEqual(response.status_code, 200)
+

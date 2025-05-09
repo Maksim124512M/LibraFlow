@@ -1,3 +1,4 @@
+from django.db.models import Count
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -5,7 +6,7 @@ from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.views import APIView
 
-from .models import Book
+from .models import Book, BookRental
 from .serializers import BookSerializer
 from .services.book_rent import rent_book
 
@@ -117,3 +118,20 @@ class BookRentView(APIView):
             },
             status=200
         )
+
+
+class BookStatsView(APIView):
+    def get(self, request, *args, **kwargs):
+        '''
+        Get statistics about the books in the library.
+        '''
+
+        total_books = Book.objects.count()
+        total_rentals = BookRental.objects.count()
+        most_rented_book = Book.objects.annotate(rental_count=Count('rentals')).order_by('-rental_count').first()
+
+        return Response({
+            'total_books': total_books,
+            'total_rentals': total_rentals,
+            'most_rented_book': most_rented_book.title if most_rented_book else None
+        })

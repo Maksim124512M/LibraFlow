@@ -4,6 +4,7 @@ from .views import (
     BookListView, AddBookView,
     DeleteBookView, UpdateBookView,
     DetailBookView, BookRentView,
+    BookStatsView,
 )
 
 urlpatterns = [
@@ -13,4 +14,5 @@ urlpatterns = [
     path('books/<uuid:uuid>/update/', UpdateBookView.as_view(), name='update-book'),
     path('books/<uuid:uuid>/delete/', DeleteBookView.as_view(), name='delete-book'),
     path('books/<uuid:uuid>/rent/', BookRentView.as_view(), name='rent-book'),
+    path('books/stats/', BookStatsView.as_view(), name='books-stats'),
 ]
