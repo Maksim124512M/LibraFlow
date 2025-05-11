@@ -56,3 +56,24 @@ class BookRental(models.Model):
         verbose_name = 'Book Rental'
         verbose_name_plural = 'Book Rentals'
         ordering = ['-rented_at']
+
+
+class Review(models.Model):
+    '''
+    Model representing a review on book.
+    '''
+
+    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='review')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='review')
+    content = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'Review on {self.book}'
+
+    class Meta:
+        verbose_name = 'Review'
+        verbose_name_plural = 'Reviews'
+        ordering = ['-updated_at']

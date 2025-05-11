@@ -6,44 +6,36 @@ from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.views import APIView
 
-from .models import Book, BookRental
-from .serializers import BookSerializer
+from .models import Book, BookRental, Review
+from .serializers import BookSerializer, ReviewSerializer
 from .services.book_rent import rent_book
 
 
 class BookListView(generics.ListAPIView):
-    """
+    '''
     API view to list all books in the library.
-    """
+    '''
 
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['genre', 'published_year']
 
 
 class AddBookView(generics.CreateAPIView):
-    """
+    '''
     API view to add a new book to the library.
-    """
+    '''
 
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticated]
 
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-
-        return Response(serializer.data, status=201)
-
 
 class UpdateBookView(generics.UpdateAPIView):
-    """
+    '''
     API view to update an existing book in the library.
-    """
+    '''
 
     queryset = Book.objects.all()
     serializer_class = BookSerializer
@@ -63,9 +55,9 @@ class UpdateBookView(generics.UpdateAPIView):
 
 
 class DeleteBookView(generics.DestroyAPIView):
-    """
+    '''
     API view to delete a book from the library.
-    """
+    '''
 
     queryset = Book.objects.all()
     serializer_class = BookSerializer
@@ -83,9 +75,9 @@ class DeleteBookView(generics.DestroyAPIView):
 
 
 class DetailBookView(generics.RetrieveAPIView):
-    """
+    '''
     API view to retrieve the details of a specific book.
-    """
+    '''
 
     queryset = Book.objects.all()
     serializer_class = BookSerializer
@@ -103,9 +95,9 @@ class BookRentView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, uuid):
-        """
+        '''
         Rent a book.
-        """
+        '''
 
         book = Book.objects.get(uuid=uuid)
         rent = rent_book(request.user, book)
@@ -135,3 +127,75 @@ class BookStatsView(APIView):
             'total_rentals': total_rentals,
             'most_rented_book': most_rented_book.title if most_rented_book else None
         })
+
+
+class ReviewListView(generics.ListAPIView):
+    '''
+    API view to getting the list of reviews
+    '''
+
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+
+class AddReviewView(generics.CreateAPIView):
+    '''
+    API view to add a review to a book.
+    '''
+
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class UpdateReviewView(generics.UpdateAPIView):
+    '''
+    API view to update a review.
+    '''
+
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    permission_classes = [IsAuthenticated]
+    lookup_field = 'uuid'
+
+    def put(self, request, *args, **kwargs):
+        review = self.get_object()
+        serializer = self.get_serializer(review, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+
+        if self.request.user.role == 'admin' or self.request.user.role == 'librarian':
+            self.perform_update(serializer)
+
+        return Response(serializer.data, status=200)
+
+
+class DeleteReviewView(generics.DestroyAPIView):
+    '''
+    API view to delete a review
+    '''
+
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    permission_classes = [IsAuthenticated]
+    lookup_field = 'uuid'
+
+    def delete(self, request, *args, **kwargs):
+        review = self.get_object()
+
+        if request.user.role == 'admin' or request.user == review.author:
+            # Allow admins and author to delete the review
+
+            self.perform_destroy(review)
+
+        return Response('The review was deleted', status=204)
+
+
+class ReviewDetailView(generics.RetrieveAPIView):
+    '''
+    API view to get the details of a review
+    '''
+
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    permission_classes = [IsAuthenticated]
+    lookup_field = 'uuid'
+
