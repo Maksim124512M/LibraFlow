@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.views import APIView
 
-from .models import Book, BookRental, Review
+from .models import Book, BookRental, Review, Like, Dislike
 from .serializers import BookSerializer, ReviewSerializer
 from .services.book_rent import rent_book
 
@@ -198,4 +198,60 @@ class ReviewDetailView(generics.RetrieveAPIView):
     serializer_class = ReviewSerializer
     permission_classes = [IsAuthenticated]
     lookup_field = 'uuid'
+
+
+class LikeView(APIView):
+    '''
+    API view to like a book.
+    '''
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, uuid):
+        book = Book.objects.get(uuid=uuid)
+        user = request.user
+
+        like, created = Like.objects.get_or_create(
+            book=book,
+            author=user,
+        )
+
+        if not created:
+            return Response('You already liked this book')
+
+        book.likes += 1
+
+        book.save()
+        like.save()
+
+        return Response('You liked the book')
+
+
+class DislikeView(APIView):
+    '''
+    API view to dislike a book.
+    '''
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, uuid):
+        book = Book.objects.get(uuid=uuid)
+        user = request.user
+
+        dislike, created = Dislike.objects.get_or_create(
+            book=book,
+            author=user,
+        )
+
+        if not created:
+            return Response('You already disliked this book')
+
+        book.dislikes += 1
+
+        book.save()
+        dislike.save()
+
+        return Response('You disliked the book')
+
+
 
