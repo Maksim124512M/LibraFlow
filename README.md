@@ -14,8 +14,8 @@
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/your-username/your-django-project.git
-cd your-django-project
+git clone https://github.com/Maksim124512M/LibraFlow.git
+cd libra_flow
 
 # 2. Create and activate a virtual environment
 python -m venv .venv
