@@ -320,4 +320,3 @@ class LikesAndDislikedTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(book.dislikes, 1)
         self.assertEqual(Dislike.objects.all().count(), 1)
-
