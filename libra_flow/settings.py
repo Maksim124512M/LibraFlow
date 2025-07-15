@@ -149,5 +149,13 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': (
         'django_filters.rest_framework.DjangoFilterBackend',
     ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 
+}
+
+# API Documentation
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Library API',
+    'DESCRIPTION': 'API for managing books, reviews, and rentals.',
+    'VERSION': '1.0.0',
 }
