@@ -7,10 +7,11 @@
 - PostgreSQL (or other database depending on the project)
 - Git (optional)
 - Virtual environment (recommended)
+- Docker (optional, for containerized setup)
 
 ---
 
-### 🔧 Steps 1–4: Clone, Set Up Environment, Install Dependencies, Configure `.env`
+### 🔧 Steps 1–3: Clone, Set Up Environment, Configure `.env`
 
 ```bash
 # 1. Clone the repository
@@ -21,24 +22,16 @@ cd libra_flow
 python -m venv .venv
 .venv\Scripts\activate
 
-# 3. Install dependencies
-pip install -r requirements.txt
+# 3. Creating a `.env` file
+copy .env.example .env
 ```
 
-### 🛠️ Step 5: Apply Migrations
+### 🛠️ Step 4: Running container with Docker
 
 ```bash
-python manage.py migrate
+docker compose up --build
 ```
 
-### 👤 Step 6: Create a Superuser
-
-```bash
-python manage.py createsuperuser
-```
-
-### 🚦 Step 7: Start the Development Server
-
-```bash
-python manage.py runserver
-```
+### Admin Panel
+username: `admin` <br>
+password: `admin123`
