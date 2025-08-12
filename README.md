@@ -32,6 +32,8 @@ copy .env.example .env
 docker compose up --build
 ```
 
+Please redirect to http://127.0.0.1:8000
+
 ### Admin Panel
 username: `admin` <br>
 password: `admin123`
