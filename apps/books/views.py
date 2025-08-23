@@ -30,3 +30,9 @@ class BookAPIUpdateView(generics.UpdateAPIView):
             return Response({'detail': 'You do not have permission to edit this book.'}, status=status.HTTP_403_FORBIDDEN)
 
         return super().update(request, *args, **kwargs)
+
+
+class BookAPICreateView(generics.CreateAPIView):
+    queryset = Book.objects.select_related('publisher').all()
+    serializer_class = BookSerializer
+    permission_classes = [IsAdminOrLibrarian]
