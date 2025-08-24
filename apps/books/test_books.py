@@ -37,3 +37,15 @@ def test_book_detail(client, test_book):
     response = client.get(url, HTTP_ACCEPT='application/json')
 
     assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_book_filter(client, test_book):
+    url = f'/api/v1/books/list/?title=title&author=John'
+    response = client.get(url)
+
+    data = response.json()
+
+    assert response.status_code == 200
+    assert len(data) == 1
+    assert data[0]['title'] == 'Title'

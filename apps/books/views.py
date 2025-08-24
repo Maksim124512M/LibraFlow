@@ -1,3 +1,5 @@
+import django_filters
+
 from rest_framework import generics
 from rest_framework.response import Response
 
@@ -6,9 +8,20 @@ from .serializers import BookSerializer
 from .permissions import IsAdminOrLibrarian
 
 
+class BookFilter(django_filters.FilterSet):
+    title = django_filters.CharFilter(field_name='title', lookup_expr='icontains')
+    author = django_filters.CharFilter(field_name='author', lookup_expr='icontains')
+
+    class Meta:
+        model = Book
+        fields = ['title', 'author']
+
+
 class BooksAPIListView(generics.ListAPIView):
     queryset = Book.objects.select_related('publisher').order_by('rating')
     serializer_class = BookSerializer
+    filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
+    filterset_class = BookFilter
 
 
 class BookAPIDetailView(generics.RetrieveAPIView):
