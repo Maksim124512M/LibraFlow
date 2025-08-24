@@ -13,6 +13,7 @@ class Book(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False)
     title = models.CharField(max_length=255)
     author = models.CharField(max_length=255)
+    book_image = models.ImageField(upload_to='books_images/', null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     published_date = models.DateField(null=True, blank=True)
     isbn = models.CharField(max_length=13, unique=True)
@@ -31,5 +32,19 @@ class Book(models.Model):
     def __str__(self):
         return self.title
 
+
+class BookRent(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    renter = models.ForeignKey(User, on_delete=models.CASCADE)
+    rent_start_date = models.DateTimeField(auto_now_add=True)
+    rent_end_date = models.DateTimeField()
+
+    class Meta:
+        verbose_name = 'BookRent'
+        verbose_name_plural = 'BookRents'
+
+    def __str__(self) -> str:
+        return f'Rent {self.book.title} by {self.renter.username}'
 
 
