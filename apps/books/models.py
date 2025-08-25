@@ -19,6 +19,7 @@ class Book(models.Model):
     isbn = models.CharField(max_length=13, unique=True)
     count_of_pages = models.PositiveIntegerField(null=True, blank=True)
     language_iso = models.CharField(max_length=10, null=True, blank=True)
+    file = models.FileField(upload_to='books/')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     rating = models.PositiveIntegerField(default=0)

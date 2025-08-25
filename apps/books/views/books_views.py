@@ -1,10 +1,13 @@
 import django_filters
+from django.shortcuts import get_object_or_404
 
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.request import Request
 
-from ..models import Book
+from django.http import FileResponse, Http404
+
+from ..models import Book, BookRent
 from ..serializers import BookSerializer
 from ..permissions import IsAdminOrLibrarian
 
@@ -41,6 +44,20 @@ class BookAPIDetailView(generics.RetrieveAPIView):
     queryset = Book.objects.select_related('publisher').all()
     serializer_class = BookSerializer
     lookup_field = 'uuid'
+
+    def get(self, request: Request, *args, **kwargs):
+        book_id = kwargs.get('uuid')
+        book = get_object_or_404(Book, uuid=book_id)
+
+        try:
+            rent = BookRent.objects.get(renter=request.user, book=book)
+        except BookRent.DoesNotExist:
+            return Response({'detail': 'You did not rent this book.'}, status=403)
+
+        if book.file:
+            return FileResponse(book.file.open('rb'), as_attachment=True, filename=book.file.name)
+        else:
+            raise Http404('File not found')
 
 
 class BookAPIUpdateView(generics.UpdateAPIView):
