@@ -1,4 +1,4 @@
-from .models import Book, BookRent
+from .models import Book, BookRent, BookReview
 
 from rest_framework.serializers import ModelSerializer
 
@@ -16,4 +16,10 @@ class BookSerializer(ModelSerializer):
 class BookRentSerializer(ModelSerializer):
     class Meta:
         model = BookRent
+        fields = '__all__'
+
+
+class BookReviewSerializer(ModelSerializer):
+    class Meta:
+        model = BookReview
         fields = '__all__'

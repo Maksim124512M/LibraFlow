@@ -28,7 +28,7 @@ def test_rent_book(test_book):
     user = User.objects.create_user(username='testuser', password='testpass')
     client.force_authenticate(user=user)
 
-    url = f'/api/v1/books/rent/{test_book[0].uuid}/'
+    url = f'/api/v2/books/rent/{test_book[0].uuid}/'
     response = client.post(url)
 
     assert response.status_code == 200

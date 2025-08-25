@@ -48,3 +48,18 @@ class BookRent(models.Model):
         return f'Rent {self.book.title} by {self.renter.username}'
 
 
+class BookReview(models.Model):
+    uuid = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    content = models.CharField(max_length=1000)
+
+    class Meta:
+        verbose_name = 'BookReview'
+        verbose_name_plural = 'BooksReviews'
+
+    def __str__(self) -> str:
+        return f'Review on {self.book.title} by {self.author.username}'
+
+
