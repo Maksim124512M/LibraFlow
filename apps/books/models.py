@@ -91,3 +91,17 @@ class BookRating(models.Model):
         return f'User {self.user.username} liked "{self.book.title}"'
 
 
+class FavoriteBook(models.Model):
+    uuid = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('book', 'user')
+        ordering = ['-added_at']
+
+    def __str__(self) -> str:
+        return f'{self.user.username}s favorite book - "{self.book.title}"'
+
+

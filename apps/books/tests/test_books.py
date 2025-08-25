@@ -3,6 +3,9 @@ import pytest
 from apps.books.models import Book
 from apps.users.models import User
 
+from rest_framework.test import APIClient
+from rest_framework_simplejwt.tokens import AccessToken
+
 
 @pytest.fixture
 def test_user(db) -> User:
@@ -29,7 +32,11 @@ def test_books_list(client) -> None:
 
 
 @pytest.mark.django_db
-def test_book_detail(client, test_book) -> None:
+def test_book_detail(test_book, test_user) -> None:
+    client = APIClient()
+    token = AccessToken.for_user(test_user)
+    client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
+
     book = test_book[0]
     url = f'/api/v1/books/{book.uuid}/'
     response = client.get(url, HTTP_ACCEPT='application/json')

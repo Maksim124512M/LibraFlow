@@ -1,7 +1,10 @@
 import os
 import magic
 
-from .models import Book, BookRent, BookReview, BookRating
+from .models import (
+    Book, BookRent, BookReview,
+    BookRating, FavoriteBook,
+)
 
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
@@ -70,4 +73,10 @@ class BookRatingSerializer(ModelSerializer):
 
     class Meta:
         model = BookRating
+        fields = '__all__'
+
+
+class FavoriteBookSerializer(ModelSerializer):
+    class Meta:
+        model = FavoriteBook
         fields = '__all__'

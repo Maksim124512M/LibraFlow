@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.request import Request
+from rest_framework.permissions import IsAuthenticated
 
 from django.http import FileResponse, Http404
 
@@ -45,20 +46,6 @@ class BookAPIDetailView(generics.RetrieveAPIView):
     serializer_class = BookSerializer
     lookup_field = 'uuid'
 
-    def get(self, request: Request, *args, **kwargs):
-        book_id = kwargs.get('uuid')
-        book = get_object_or_404(Book, uuid=book_id)
-
-        try:
-            rent = BookRent.objects.get(renter=request.user, book=book)
-        except BookRent.DoesNotExist:
-            return Response({'detail': 'You did not rent this book.'}, status=403)
-
-        if book.file:
-            return FileResponse(book.file.open('rb'), as_attachment=True, filename=book.file.name)
-        else:
-            raise Http404('File not found')
-
 
 class BookAPIUpdateView(generics.UpdateAPIView):
     '''
@@ -87,3 +74,24 @@ class BookAPICreateView(generics.CreateAPIView):
     queryset = Book.objects.select_related('publisher').all()
     serializer_class = BookSerializer
     permission_classes = [IsAdminOrLibrarian]
+
+
+class BookAPIReadView(generics.RetrieveAPIView):
+    queryset = Book.objects.select_related('publisher').all()
+    serializer_class = BookSerializer
+    lookup_field = 'book_uuid'
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request: Request, *args, **kwargs):
+        book_id = kwargs.get('book_uuid')
+        book = get_object_or_404(Book, uuid=book_id)
+
+        try:
+            rent = BookRent.objects.get(renter=request.user, book=book)
+        except BookRent.DoesNotExist:
+            return Response({'detail': 'You did not rent this book.'}, status=403)
+
+        if book.file:
+            return FileResponse(book.file.open('rb'), as_attachment=True, filename=book.file.name)
+        else:
+            raise Http404('File not found')
