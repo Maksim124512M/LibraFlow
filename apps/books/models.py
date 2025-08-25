@@ -23,6 +23,7 @@ class Book(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     rating = models.PositiveIntegerField(default=0)
     publisher = models.ForeignKey(User, on_delete=models.CASCADE)
+    ratings = models.PositiveIntegerField(default=0)
 
     class Meta:
         ordering = ['-created_at']
@@ -34,6 +35,10 @@ class Book(models.Model):
 
 
 class BookRent(models.Model):
+    '''
+    Model representing the rental of a book by a user.
+    '''
+
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     renter = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -49,6 +54,10 @@ class BookRent(models.Model):
 
 
 class BookReview(models.Model):
+    '''
+    Model representing a review of a book by a user.
+    '''
+
     uuid = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -61,5 +70,23 @@ class BookReview(models.Model):
 
     def __str__(self) -> str:
         return f'Review on {self.book.title} by {self.author.username}'
+
+
+class BookRating(models.Model):
+    '''
+    Model representing a like (rating) of a book by a user.
+    '''
+
+    uuid = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = 'BookRating'
+        verbose_name_plural = 'BooksRatings'
+        unique_together = ('book', 'user')
+
+    def __str__(self) -> str:
+        return f'User {self.user.username} liked "{self.book.title}"'
 
 

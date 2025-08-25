@@ -11,9 +11,19 @@ from ..serializers import BookRentSerializer
 
 
 class BookRentServices:
+    '''
+    Service class for handling book rental operations such as renting and unrenting books.
+    '''
 
     @staticmethod
-    def rent_book(request, book_uuid):
+    def rent_book(request, book_uuid) -> Response:
+        '''
+        Method to rent a book. If the user has already rented the book, it returns a message indicating so.
+        :param request:
+        :param book_uuid:
+        :return:
+        '''
+
         book = Book.objects.get(uuid=book_uuid)
         rent_end_date = timezone.now() + timedelta(seconds=60)
 
@@ -31,7 +41,14 @@ class BookRentServices:
             return Response(serializer.data)
 
     @staticmethod
-    def unrent_book(request, book_uuid):
+    def unrent_book(request, book_uuid) -> Response:
+        '''
+        Method to unrent (delete rental) a book. Only the user who rented the book or an admin/librarian can delete the rental.
+        :param request:
+        :param book_uuid:
+        :return:
+        '''
+
         user = request.user
 
         try:

@@ -2,6 +2,7 @@ import django_filters
 
 from rest_framework import generics
 from rest_framework.response import Response
+from rest_framework.request import Request
 
 from ..models import Book
 from ..serializers import BookSerializer
@@ -52,7 +53,7 @@ class BookAPIUpdateView(generics.UpdateAPIView):
     permission_classes = [IsAdminOrLibrarian]
     lookup_field = 'uuid'
 
-    def update(self, request, *args, **kwargs):
+    def update(self, request: Request, *args, **kwargs):
         book = self.get_object()
 
         if request.user != book.publisher:

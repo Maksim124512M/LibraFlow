@@ -13,6 +13,10 @@ from .views.books_reviews import (
     BookReviewUpdateView, BookReviewDeleteView,
 )
 
+from .views.books_rating import (
+    LikeBookView, DislikeBookView
+)
+
 
 urlpatterns = [
     path('list/', BooksAPIListView.as_view(), name='books_list'),
@@ -25,4 +29,6 @@ urlpatterns = [
     path('reviews/list/<uuid:book_uuid>/', BookReviewsListView.as_view(), name='reviews_list'),
     path('review/update/<uuid:uuid>/', BookReviewUpdateView.as_view(), name='review_update'),
     path('review/delete/<uuid:uuid>/', BookReviewDeleteView.as_view(), name='review_update'),
+    path('<uuid:book_uuid>/like/', LikeBookView.as_view(), name='book_like'),
+    path('<uuid:book_uuid>/dislike/', DislikeBookView.as_view(), name='book_dislike'),
 ]

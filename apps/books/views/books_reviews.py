@@ -8,19 +8,19 @@ from ..serializers import BookReviewSerializer
 
 
 class CreateBookReviewAPIView(generics.CreateAPIView):
-    queryset = BookReview.objects.select_related('author').all()
+    queryset = BookReview.objects.select_related('author', 'book').all()
     serializer_class = BookReviewSerializer
     permission_classes = [IsAuthenticated]
 
 
 class BookReviewsListView(generics.ListAPIView):
-    queryset = BookReview.objects.select_related('author').all()
+    queryset = BookReview.objects.select_related('author', 'book').all()
     serializer_class = BookReviewSerializer
     lookup_field = 'book_uuid'
 
 
 class BookReviewUpdateView(generics.UpdateAPIView):
-    queryset = BookReview.objects.select_related('author').all()
+    queryset = BookReview.objects.select_related('author', 'book').all()
     serializer_class = BookReviewSerializer
     permission_classes = [IsAuthenticated]
     lookup_field = 'uuid'
@@ -35,7 +35,7 @@ class BookReviewUpdateView(generics.UpdateAPIView):
 
 
 class BookReviewDeleteView(generics.DestroyAPIView):
-    queryset = BookReview.objects.select_related('author').all()
+    queryset = BookReview.objects.select_related('author', 'book').all()
     serializer_class = BookReviewSerializer
     permission_classes = [IsAuthenticated]
     lookup_field = 'uuid'
