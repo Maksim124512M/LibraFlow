@@ -8,18 +8,30 @@ from ..serializers import BookReviewSerializer
 
 
 class CreateBookReviewAPIView(generics.CreateAPIView):
+    '''
+    View to create a new book review.
+    '''
+
     queryset = BookReview.objects.select_related('author', 'book').all()
     serializer_class = BookReviewSerializer
     permission_classes = [IsAuthenticated]
 
 
 class BookReviewsListView(generics.ListAPIView):
+    '''
+    View to list all reviews for a specific book.
+    '''
+
     queryset = BookReview.objects.select_related('author', 'book').all()
     serializer_class = BookReviewSerializer
     lookup_field = 'book_uuid'
 
 
 class BookReviewUpdateView(generics.UpdateAPIView):
+    '''
+    View to update an existing book review.
+    '''
+
     queryset = BookReview.objects.select_related('author', 'book').all()
     serializer_class = BookReviewSerializer
     permission_classes = [IsAuthenticated]
@@ -35,6 +47,10 @@ class BookReviewUpdateView(generics.UpdateAPIView):
 
 
 class BookReviewDeleteView(generics.DestroyAPIView):
+    '''
+    View to delete an existing book review.
+    '''
+
     queryset = BookReview.objects.select_related('author', 'book').all()
     serializer_class = BookReviewSerializer
     permission_classes = [IsAuthenticated]

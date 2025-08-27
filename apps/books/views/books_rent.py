@@ -7,21 +7,22 @@ from ..services.book_rent import BookRentServices
 
 class RentBookAPIView(generics.CreateAPIView):
     '''
-    View to handle renting a book.
+    View for renting a book.
     '''
 
     permission_classes = [IsAuthenticated]
 
     def post(self, request, book_uuid) -> Response:
-        rent_create = BookRentServices.rent_book(request, book_uuid)
 
-        return rent_create
+        return BookRentServices.rent_book(request, book_uuid)
 
 
-class UnrentBookAPIView(generics.CreateAPIView):
+class UnrentBookAPIView(generics.DestroyAPIView):
+    '''
+    View for unrenting a book.
+    '''
+
     permission_classes = [IsAuthenticated]
 
     def delete(self, request, book_uuid) -> Response:
-        unrent_book = BookRentServices.unrent_book(request, book_uuid)
-
-        return unrent_book
+        return BookRentServices.unrent_book(request, book_uuid)

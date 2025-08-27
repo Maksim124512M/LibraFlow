@@ -169,3 +169,9 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': timedelta(seconds=60),
     },
 }
+
+# Stripe
+STRIPE_API_KEY = os.getenv('STRIPE_API_KEY')
+STRIPE_WEBHOOK_SECRET = os.getenv('STRIPE_WEBHOOK_SECRET')
+STRIPE_SUCCESS_URL = 'http://127.0.0.1:8000/pay/success?session_id={CHECKOUT_SESSION_ID}'
+STRIPE_CANCEL_URL = 'http://127.0.0.1:8000/pay/cancel'

@@ -25,6 +25,7 @@ class Book(models.Model):
     rating = models.PositiveIntegerField(default=0)
     publisher = models.ForeignKey(User, on_delete=models.CASCADE)
     ratings = models.PositiveIntegerField(default=0)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
 
     class Meta:
         ordering = ['-created_at']
@@ -92,10 +93,16 @@ class BookRating(models.Model):
 
 
 class FavoriteBook(models.Model):
+    '''
+    Model representing a user's favorite book.
+    '''
+
     uuid = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     added_at = models.DateTimeField(auto_now_add=True)
+    paid = models.BooleanField(default=False)
+    stripe_session_id = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         unique_together = ('book', 'user')

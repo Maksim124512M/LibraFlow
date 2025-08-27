@@ -77,6 +77,10 @@ class BookRatingSerializer(ModelSerializer):
 
 
 class FavoriteBookSerializer(ModelSerializer):
+    '''
+    Serializer for the FavoriteBook model.
+    '''
+
     class Meta:
         model = FavoriteBook
         fields = '__all__'

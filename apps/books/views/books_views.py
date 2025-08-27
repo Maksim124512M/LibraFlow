@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404
 
 from rest_framework import generics
 from rest_framework.response import Response
+from rest_framework import status
 from rest_framework.request import Request
 from rest_framework.permissions import IsAuthenticated
 
@@ -77,6 +78,10 @@ class BookAPICreateView(generics.CreateAPIView):
 
 
 class BookAPIReadView(generics.RetrieveAPIView):
+    '''
+    API view to download the file of a rented book. Only users who have rented the book can download it.
+    '''
+
     queryset = Book.objects.select_related('publisher').all()
     serializer_class = BookSerializer
     lookup_field = 'book_uuid'
