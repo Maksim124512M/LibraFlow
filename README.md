@@ -1,11 +1,18 @@
-# LibraFlow
-#### Libra Flow - Online Bookstore (E-Commerce API) built with Django, Django REST Framework, PostgreSQL, Celery, Redis, and Docker. A backend for an online bookstore with catalog management, shopping cart, and order processing. Implemented asynchronous tasks with Celery for order confirmation and email notifications.
+# LibraFlow 📚
+#### Libra Flow - Online Bookstore (E-Commerce API) built with Django, Django REST Framework, PostgreSQL, Celery, Redis, and Docker. 
+#### A backend for an online bookstore with catalog management, shopping cart, and order processing. 
+#### Implemented asynchronous tasks with Celery for order confirmation and email notifications.
 
-# Quick Start
-`
-1. Clone the repository:`
+## 🚀 Features
+- CRUD for books, authors, genres
+- Search and filtering
+- JWT authentication
+- Docker containerization
+  
+## ⚙️ Installation
+1. Clone the repository:
    ```bash
-   git clone
+   git clone https://github.com/Maksim124512M/LibraFlow.git
    ```
 2. Navigate to the project directory:
    ```bash
@@ -33,6 +40,26 @@
    docker-compose up --build
    ```
    
-# Admin User
+# 🛠️ Admin User
 #### Username: admin
 #### Password: supersecret
+
+## 🔗 Usage
+
+### Create a new book
+```bash
+curl -X POST http://127.0.0.1:8000/api/v4/books/create/ \
+-H "Content-Type: application/json" \
+-d '{"title": "1984", "author": "George Orwell"}'
+```
+
+## 🛠️ Tech Stack
+- Python 3.11
+- Django + DRF
+- PostgreSQL
+- Docker
+- Redis + Celery
+
+## 👨‍💻 Author
+Developed by [Maxim Velichko](https://www.linkedin.com/in/maxim-velichko-60b9b9333/)  
+Telegram: [@zefiryyss](https://t.me/zefiryyss)  
